@@ -1,5 +1,6 @@
 /* vi: set sw=8 ts=8: (internal/tests/test_all.c) */
 #include <stdio.h>
+
 void test_err(void);
 void test_hash(void);
 void test_map_set(void);
@@ -9,15 +10,26 @@ void test_get(void);
 void test_has(void);
 void test_len(void);
 
+#define GREEN "\x1b[32m"
+#define RED "\x1b[31m"
+#define RESET "\x1b[0m"
+
+#define RUN(test)                                         \
+        do {                                              \
+                test();                                   \
+                printf(GREEN "[✓]" RESET " %s\n", #test); \
+        } while (0)
+
 int main(void) {
-        test_hash();
-        test_map_set();
-        test_map_get();
-        test_err();
-        test_set();
-        test_get();
-        test_has();
-        test_len();
-        printf("all tests passed\n");
+        RUN(test_hash);
+        RUN(test_map_set);
+        RUN(test_map_get);
+        RUN(test_err);
+        RUN(test_set);
+        RUN(test_get);
+        RUN(test_has);
+        RUN(test_len);
+
+        printf("\n" GREEN "all tests passed" RESET "\n");
         return 0;
 }
