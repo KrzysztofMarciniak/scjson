@@ -31,7 +31,7 @@ scjson scj_new(void) {
                 return NULL;
         }
         j->get            = scj_get;
-        j->set            = scj_set;
+        j->set            = scj_set; //done
         j->has            = scj_has;
         j->add            = scj_add;
         j->at             = scj_at;
