@@ -30,7 +30,7 @@ scjson scj_new(void) {
                 scj_error_set(SCJ_ERR_ALLOC, scj_error_string(SCJ_ERR_ALLOC));
                 return NULL;
         }
-        j->get            = scj_get;
+        j->get            = scj_get; //done
         j->set            = scj_set; //done
         j->has            = scj_has;
         j->add            = scj_add;

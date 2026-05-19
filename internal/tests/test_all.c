@@ -6,6 +6,7 @@ void test_map_set(void);
 void test_map_get(void);
 void test_set(void);
 void test_get(void);
+void test_has(void);
 
 int main(void) {
         test_hash();
@@ -14,6 +15,7 @@ int main(void) {
         test_err();
         test_set();
         test_get();
+        test_has();
         printf("all tests passed\n");
         return 0;
 }
