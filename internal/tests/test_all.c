@@ -9,6 +9,7 @@ void test_set(void);
 void test_get(void);
 void test_has(void);
 void test_len(void);
+void test_add(void);
 
 #define GREEN "\x1b[32m"
 #define RED "\x1b[31m"
@@ -29,6 +30,7 @@ int main(void) {
         RUN(test_get);
         RUN(test_has);
         RUN(test_len);
+        RUN(test_add);
 
         printf("\n" GREEN "all tests passed" RESET "\n");
         return 0;
