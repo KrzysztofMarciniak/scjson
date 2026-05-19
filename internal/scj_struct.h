@@ -4,12 +4,15 @@
 #include <stddef.h>
 
 #include "../scjson.h"
+#include "scj_error.h"
+#include "scj_map.h"
+#include "scj_type.h"
 
 struct scjson_struct {
         scjson (*get)(scjson self, const char* key);
-        void (*set)(scjson self, const char* key, void* value);
+        void (*set)(scjson self, const char* key, scjson* value);
         void (*free)(scjson self);
-        int(*has){scjson self, const char* key};
+        // int(*has){scjson self, const char* key};
         void (*add)(scjson self, void* value);
         scjson (*at)(scjson self, size_t index);
         size_t (*len)(scjson self);
@@ -18,7 +21,25 @@ struct scjson_struct {
         int (*bool)(scjson self);
         char* (*dump)(scjson self);
         char* (*pretty)(scjson self);
-        void* internal;
+        scj_type type;
+
+        union {
+                char* string;
+                double number;
+                int boolean;
+
+                struct {
+                        scjson* items;
+                        size_t count;
+                        size_t capacity;
+                } array;
+
+                struct {
+                        scj_map map;
+                } object;
+        } value;
+
+        scj_error_info error;
 };
 
 #endif

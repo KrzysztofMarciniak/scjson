@@ -1,0 +1,7 @@
+#ifndef SCJ_MAP_GET_H
+#define SCJ_MAP_GET_H
+
+#include "../scjson.h"
+scjson scj_map_get(scjson self, const char* key);
+
+#endif

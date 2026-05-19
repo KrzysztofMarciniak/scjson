@@ -1,6 +1,7 @@
 /* vi: set sw=8 ts=8: */
 #ifndef SCJ_ERROR_H
 #define SCJ_ERROR_H
+#include <stddef.h>
 
 typedef enum {
         SCJ_OK = 0,

@@ -45,3 +45,13 @@ const char* scj_error_string(scj_error error) {
                         return "SCJSON: unknown error";
         }
 }
+
+static scj_error_info last_error;
+
+void scj_err_set(scj_error type, const char* message) {
+        last_error.type     = type;
+        last_error.message  = message;
+        last_error.line     = 0;
+        last_error.column   = 0;
+        last_error.position = 0;
+}
