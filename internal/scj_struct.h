@@ -9,11 +9,10 @@
 #include "scj_type.h"
 
 struct scjson_struct {
+        scj_error_info (*set)(scjson self, const char* key, scjson value);
+        scj_error_info (*add)(scjson self, scjson value);
         scjson (*get)(scjson self, const char* key);
-        void (*set)(scjson self, const char* key, scjson* value);
-        void (*free)(scjson self);
-        // int(*has){scjson self, const char* key};
-        void (*add)(scjson self, void* value);
+        int (*has)(scjson self, const char* key);
         scjson (*at)(scjson self, size_t index);
         size_t (*len)(scjson self);
         const char* (*str)(scjson self);
@@ -21,6 +20,7 @@ struct scjson_struct {
         int (*bool)(scjson self);
         char* (*dump)(scjson self);
         char* (*pretty)(scjson self);
+        void (*free)(scjson self);
         scj_type type;
 
         union {

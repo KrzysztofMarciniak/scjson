@@ -68,6 +68,5 @@ scj_error_info scj_map_set(scjson self, const char* key, scjson value) {
         self->value.object.map.buckets[index] = node;
 
         self->value.object.map.count++;
-
         return scj_err_ok();
 }
