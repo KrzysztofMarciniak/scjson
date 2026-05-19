@@ -48,5 +48,10 @@ void test_len(void) {
 
         assert(scj_len(NULL) == 0);
 
+        scjson v3 = make_string("three");
+
+        assert(scj_set(obj, "a", v3).type == SCJ_OK);
+
+        assert(scj_len(obj) == 2);
         free(obj);
 }

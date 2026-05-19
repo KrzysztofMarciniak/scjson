@@ -32,10 +32,10 @@ scjson scj_new(void) {
         }
         j->get            = scj_get; //done
         j->set            = scj_set; //done
-        j->has            = scj_has; //has
+        j->has            = scj_has; //done
         j->add            = scj_add;
         j->at             = scj_at;
-        j->len            = scj_len;
+        j->len            = scj_len; //done
         j->str            = scj_str;
         j->num            = scj_num;
         j->bool           = scj_bool;

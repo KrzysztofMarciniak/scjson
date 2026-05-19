@@ -34,15 +34,29 @@ scj_error_info scj_map_set(scjson self, const char* key, scjson value) {
 
         index = scj_hash(key) % self->value.object.map.capacity;
 
+        node = self->value.object.map.buckets[index];
+
+        while (node) {
+                if (strcmp(node->key, key) == 0) {
+                        node->value = value;
+                        return scj_err_ok();
+                }
+
+                node = node->next;
+        }
+
         node = malloc(sizeof(scj_node));
+
         if (!node) {
                 return scj_err_set(SCJ_ERR_ALLOC,
                                    "scj_map_set.c: node allocation failed");
         }
 
         node->key = strdup(key);
+
         if (!node->key) {
                 free(node);
+
                 return scj_err_set(SCJ_ERR_ALLOC,
                                    "scj_map_set.c: key strdup failed");
         }
@@ -50,6 +64,7 @@ scj_error_info scj_map_set(scjson self, const char* key, scjson value) {
         node->value = value;
 
         node->next = self->value.object.map.buckets[index];
+
         self->value.object.map.buckets[index] = node;
 
         self->value.object.map.count++;
