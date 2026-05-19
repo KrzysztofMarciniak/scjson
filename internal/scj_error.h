@@ -1,6 +1,7 @@
-/* vi: set sw=8 ts=8: */
+/* vi: set sw=8 ts=8: (internal/scj_error.h) */
 #ifndef SCJ_ERROR_H
 #define SCJ_ERROR_H
+
 #include <stddef.h>
 
 typedef enum {
@@ -24,18 +25,23 @@ typedef enum {
         SCJ_ERR_DUMP,
         SCJ_ERR_INVALID_VALUE,
         SCJ_ERR_UNKNOWN
-
 } scj_error;
-
-const char* scj_error_string(scj_error error);
-void scj_err_set(scj_error type, const char* message);
 
 typedef struct {
         scj_error type;
         const char* message;
-        size_t line;
-        size_t column;
-        size_t position;
+
+        struct {
+                size_t line;
+                size_t column;
+                size_t position;
+        } loc;
 } scj_error_info;
+
+const char* scj_error_string(scj_error error);
+
+scj_error_info scj_err_ok(void);
+
+scj_error_info scj_err_set(scj_error type, const char* message);
 
 #endif

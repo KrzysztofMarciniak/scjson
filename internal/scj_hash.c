@@ -1,3 +1,4 @@
+/* vi: set sw=8 ts=8: (internal/scj_hash.c) */
 #include "scj_hash.h"
 
 // http://www.cse.yorku.ca/~oz/hash.html

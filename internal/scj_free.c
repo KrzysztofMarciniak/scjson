@@ -1,3 +1,4 @@
+/* vi: set sw=8 ts=8: (internal/scj_free.c) */
 /* internal/scj_free.c */
 #include <stdlib.h>
 #include <string.h>

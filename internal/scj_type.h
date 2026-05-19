@@ -1,3 +1,4 @@
+/* vi: set sw=8 ts=8: (internal/scj_type.h) */
 #ifndef SCJ_TYPE_H
 #define SCJ_TYPE_H
 

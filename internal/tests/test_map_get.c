@@ -1,3 +1,4 @@
+/* vi: set sw=8 ts=8: (internal/tests/test_map_get.c) */
 #include <assert.h>
 
 #include "../../scjson.h"

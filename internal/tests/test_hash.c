@@ -1,3 +1,4 @@
+/* vi: set sw=8 ts=8: (internal/tests/test_hash.c) */
 #include <assert.h>
 
 #include "../scj_hash.h"

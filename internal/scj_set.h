@@ -1,3 +1,4 @@
+/* vi: set sw=8 ts=8: (internal/scj_set.h) */
 #ifndef SCJ_SET_H
 #define SCJ_SET_H
 

@@ -1,3 +1,4 @@
+/* vi: set sw=8 ts=8: (internal/scj_map_get.c) */
 #include "scj_map_get.h"
 
 #include <string.h>

@@ -46,12 +46,22 @@ const char* scj_error_string(scj_error error) {
         }
 }
 
-static scj_error_info last_error;
+scj_error_info scj_err_ok(void) {
+        scj_error_info er;
+        er.type         = SCJ_OK;
+        er.message      = NULL;
+        er.loc.line     = 0;
+        er.loc.column   = 0;
+        er.loc.position = 0;
+        return er;
+}
 
-void scj_err_set(scj_error type, const char* message) {
-        last_error.type     = type;
-        last_error.message  = message;
-        last_error.line     = 0;
-        last_error.column   = 0;
-        last_error.position = 0;
+scj_error_info scj_err_set(scj_error type, const char* message) {
+        scj_error_info er;
+        er.type         = type;
+        er.message      = message;
+        er.loc.line     = 0;
+        er.loc.column   = 0;
+        er.loc.position = 0;
+        return er;
 }

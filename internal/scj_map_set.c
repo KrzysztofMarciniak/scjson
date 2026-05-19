@@ -1,3 +1,4 @@
+/* vi: set sw=8 ts=8: (internal/scj_map_set.c) */
 #define _POSIX_C_SOURCE 200809L
 #include "scj_map_set.h"
 
@@ -8,26 +9,37 @@
 #include "scj_hash.h"
 #include "scj_struct.h"
 
-void scj_map_set(scjson self, const char* key, scjson value) {
+scj_error_info scj_map_set(scjson self, const char* key, scjson value) {
         size_t index;
         scj_node* node;
+
+        if (!self || !key || self->value.object.map.capacity == 0) {
+                return scj_err_set(SCJ_ERR_INVALID_VALUE,
+                                   "scj_map_set.c: invalid input");
+        }
+
         index = scj_hash(key) % self->value.object.map.capacity;
 
         node = malloc(sizeof(scj_node));
         if (!node) {
-                scj_err_set(SCJ_ERR_ALLOC, scj_error_string(SCJ_ERR_ALLOC));
-                return;
+                return scj_err_set(
+                    SCJ_ERR_ALLOC,
+                    "scj_map_set.c: node memory allication failed.");
         }
 
         node->key = strdup(key);
         if (!node->key) {
                 free(node);
-                scj_err_set(SCJ_ERR_ALLOC, scj_error_string(SCJ_ERR_ALLOC));
-                return;
+                return scj_err_set(
+                    SCJ_ERR_ALLOC,
+                    "scj_map_set.c: key dup memory allication failed.");
         }
 
         node->value = value;
         node->next  = self->value.object.map.buckets[index];
+
         self->value.object.map.buckets[index] = node;
         self->value.object.map.count++;
+
+        return scj_err_ok();
 }

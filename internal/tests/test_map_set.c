@@ -1,3 +1,4 @@
+/* vi: set sw=8 ts=8: (internal/tests/test_map_set.c) */
 #include <assert.h>
 
 #include "../scj_map_init.h"
