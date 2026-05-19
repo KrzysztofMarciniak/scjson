@@ -10,6 +10,6 @@ int main(void) {
         test_map_set();
         test_map_get();
         test_err();
-        printf("all tests passwed\n");
+        printf("all tests passed\n");
         return 0;
 }
