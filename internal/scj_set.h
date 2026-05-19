@@ -2,8 +2,11 @@
 #ifndef SCJ_SET_H
 #define SCJ_SET_H
 
-#include "../scjson.h"
+#include <stddef.h>
 
-void scj_set(scjson self, const char* key, scjson value);
+#include "../scjson.h"
+#include "scj_error.h"
+
+scj_error_info scj_set(scjson self, const char* key, scjson value);
 
 #endif
