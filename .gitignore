@@ -1,1 +1,3 @@
 *.o
+test_scjson
+scjson.o
