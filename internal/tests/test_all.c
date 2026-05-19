@@ -16,6 +16,8 @@ void test_scalar(void);
 void test_dump(void);
 void test_pretty(void);
 void test_new_free(void);
+void test_parse(void);
+// void test_api(void);
 
 #define GREEN "\x1b[32m"
 #define RED "\x1b[31m"
@@ -43,6 +45,8 @@ int main(void) {
         RUN(test_dump);
         RUN(test_pretty);
         RUN(test_new_free);
+        RUN(test_parse);
+        //        RUN(test_api);
 
         printf("\n" GREEN "all tests passed" RESET "\n");
         return 0;

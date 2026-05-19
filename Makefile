@@ -1,7 +1,7 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c99 -O2 -I.
+CFLAGS = -Wall -Wextra -std=c99 -O0 -g -I.
 
-SRC = scjson.c $(wildcard internal/*.c)
+SRC = $(wildcard internal/*.c)
 TEST_SRC = $(wildcard internal/tests/*.c)
 
 OBJ = $(SRC:.c=.o)
