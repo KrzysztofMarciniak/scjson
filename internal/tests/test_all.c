@@ -14,6 +14,7 @@ void test_at(void);
 void test_str(void);
 void test_scalar(void);
 void test_dump(void);
+void test_pretty(void);
 
 #define GREEN "\x1b[32m"
 #define RED "\x1b[31m"
@@ -39,6 +40,7 @@ int main(void) {
         RUN(test_str);
         RUN(test_scalar);
         RUN(test_dump);
+        RUN(test_pretty);
 
         printf("\n" GREEN "all tests passed" RESET "\n");
         return 0;

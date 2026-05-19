@@ -39,7 +39,7 @@ scjson scj_new(void) {
         j->str            = scj_str; //done
         j->num            = scj_num; //done
         j->bool           = scj_bool; //done
-        j->dump           = scj_dump;
+        j->dump           = scj_dump; //done
         j->pretty         = scj_pretty;
         j->free           = scj_free;
         j->internal       = NULL;
