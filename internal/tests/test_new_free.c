@@ -8,34 +8,31 @@
 
 #include "../scj_free.h"
 #include "../scj_new.h"
-#include "../scj_struct.h"
-#include "../scj_type.h"
+#include "../../scjson.h"
 
-static void test_new_not_null(void) {
+static void test_new_not_null(void)
+{
         scjson j = scj_new();
         assert(j != NULL);
 
         scj_free(j);
 }
 
-static void test_new_initial_state(void) {
+static void test_new_initial_state(void)
+{
         scjson j = scj_new();
         assert(j != NULL);
 
-        /* type must be valid */
         assert(j->type == SCJ_NULL);
 
-        /* object map must be initialized safely */
         assert(j->value.object.map.buckets == NULL);
         assert(j->value.object.map.count == 0);
         assert(j->value.object.map.capacity == 0);
 
-        /* array must be safe (even if unused) */
         assert(j->value.array.items == NULL);
         assert(j->value.array.count == 0);
         assert(j->value.array.capacity == 0);
 
-        /* scalar fields must be safe */
         assert(j->value.string == NULL);
         assert(j->value.number == 0);
         assert(j->value.boolean == 0);
@@ -43,7 +40,8 @@ static void test_new_initial_state(void) {
         scj_free(j);
 }
 
-static void test_new_error_state(void) {
+static void test_new_error_state(void)
+{
         scjson j = scj_new();
         assert(j != NULL);
 
@@ -53,26 +51,22 @@ static void test_new_error_state(void) {
         scj_free(j);
 }
 
-static void test_free_null_safety(void) {
-        /* must not crash */
+static void test_free_null_safety(void)
+{
         scj_free(NULL);
 }
 
-static void test_free_object_chain(void) {
+static void test_free_object_chain(void)
+{
         scjson root = scj_new();
         assert(root != NULL);
 
-        /* build a small structure */
         scjson child = scj_new();
-        assert(child != NULL);
+        scjson leaf  = scj_new();
 
-        scjson leaf = scj_new();
-        assert(leaf != NULL);
-
-        root->type                      = SCJ_OBJECT;
+        root->type = SCJ_OBJECT;
         root->value.object.map.capacity = 1;
-        root->value.object.map.buckets  = calloc(1, sizeof(scj_node*));
-
+        root->value.object.map.buckets = calloc(1, sizeof(scj_node*));
         assert(root->value.object.map.buckets != NULL);
 
         scj_node* n = malloc(sizeof(scj_node));
@@ -83,11 +77,11 @@ static void test_free_object_chain(void) {
         n->next  = NULL;
 
         root->value.object.map.buckets[0] = n;
-        root->value.object.map.count      = 1;
+        root->value.object.map.count = 1;
 
-        child->type                      = SCJ_OBJECT;
+        child->type = SCJ_OBJECT;
         child->value.object.map.capacity = 1;
-        child->value.object.map.buckets  = calloc(1, sizeof(scj_node*));
+        child->value.object.map.buckets = calloc(1, sizeof(scj_node*));
 
         scj_node* n2 = malloc(sizeof(scj_node));
         assert(n2 != NULL);
@@ -97,18 +91,18 @@ static void test_free_object_chain(void) {
         n2->next  = NULL;
 
         child->value.object.map.buckets[0] = n2;
-        child->value.object.map.count      = 1;
+        child->value.object.map.count = 1;
 
         scj_free(root);
 }
 
-static void test_free_array_chain(void) {
+static void test_free_array_chain(void)
+{
         scjson arr = scj_new();
         assert(arr != NULL);
 
-        arr->type                 = SCJ_ARRAY;
+        arr->type = SCJ_ARRAY;
         arr->value.array.capacity = 2;
-
         arr->value.array.items = calloc(2, sizeof(scjson));
         assert(arr->value.array.items != NULL);
 
@@ -117,16 +111,44 @@ static void test_free_array_chain(void) {
 
         arr->value.array.items[0] = a;
         arr->value.array.items[1] = b;
-        arr->value.array.count    = 2;
+        arr->value.array.count = 2;
 
         scj_free(arr);
 }
 
-void test_new_free(void) {
+/* ---------------- NEW TEST: typed ---------------- */
+
+static void test_new_typed(void)
+{
+        scjson s = scj_new_typed(SCJ_STRING, "hello");
+        scjson n = scj_new_typed(SCJ_NUMBER, 42.0);
+        scjson b = scj_new_typed(SCJ_BOOL, 1);
+
+        assert(s != NULL);
+        assert(n != NULL);
+        assert(b != NULL);
+
+        assert(s->type == SCJ_STRING);
+        assert(strcmp(s->value.string, "hello") == 0);
+
+        assert(n->type == SCJ_NUMBER);
+        assert(n->value.number == 42.0);
+
+        assert(b->type == SCJ_BOOL);
+        assert(b->value.boolean == 1);
+
+        scj_free(s);
+        scj_free(n);
+        scj_free(b);
+}
+
+void test_new_free(void)
+{
         test_new_not_null();
         test_new_initial_state();
         test_new_error_state();
         test_free_null_safety();
         test_free_object_chain();
         test_free_array_chain();
+        test_new_typed();
 }

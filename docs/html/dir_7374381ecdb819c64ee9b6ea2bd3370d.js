@@ -15,6 +15,7 @@ var dir_7374381ecdb819c64ee9b6ea2bd3370d =
     [ "scj_map_init.h", "scj__map__init_8h_source.html", null ],
     [ "scj_map_set.h", "scj__map__set_8h_source.html", null ],
     [ "scj_new.h", "scj__new_8h_source.html", null ],
+    [ "scj_new_typed.h", "scj__new__typed_8h_source.html", null ],
     [ "scj_num.h", "scj__num_8h_source.html", null ],
     [ "scj_parse.h", "scj__parse_8h_source.html", null ],
     [ "scj_pretty.h", "scj__pretty_8h_source.html", null ],

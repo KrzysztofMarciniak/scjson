@@ -3,8 +3,8 @@
 #ifndef SCJ_PARSE_H
 #define SCJ_PARSE_H
 
-#include "scj_lexer.h"
 #include "../scjson.h"
+#include "scj_lexer.h"
 
 scjson _scj_parse(const char* text);
 

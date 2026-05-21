@@ -5,9 +5,9 @@
 
 void test_hash(void) {
         unsigned long a, b;
-        a = scj_hash("name");
-        b = scj_hash("name");
+        a = _scj_hash("name");
+        b = _scj_hash("name");
 
         assert(a == b);
-        assert(scj_hash("name") != scj_hash("age"));
+        assert(_scj_hash("name") != _scj_hash("age"));
 }

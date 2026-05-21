@@ -6,6 +6,7 @@
 
 #include "../scjson.h"
 #include "scj_hash.h"
+
 scjson _scj_map_get(scjson self, const char* key) {
         scj_node* node;
         size_t index;

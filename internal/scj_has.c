@@ -1,6 +1,7 @@
 /* vi: set sw=8 ts=8: (internal/scj_has.c) */
-#include "../scjson.h"
 #include "scj_has.h"
+
+#include "../scjson.h"
 #include "scj_get.h"
 
 int _scj_has(scjson self, const char* key) {

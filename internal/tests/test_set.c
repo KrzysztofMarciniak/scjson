@@ -5,11 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../scj_free.h"
 #include "../scj_map_get.h"
 #include "../scj_set.h"
-#include "../scj_struct.h"
-#include "../scj_type.h"
-#include "../scj_free.h"
+#include "../../scjson.h"
 
 static scjson make_object(void) {
         scjson j = malloc(sizeof(struct scjson_struct));
@@ -29,30 +28,27 @@ static scjson make_string(const char* s) {
 
         j->type         = SCJ_STRING;
         j->value.string = strdup(s);
+        assert(j->value.string != NULL);
 
         return j;
 }
-
 void test_set(void) {
         scjson obj = make_object();
 
         scjson val = make_string("hello");
+        scj_set(obj, "name", val);
 
-        scj_error_info err = scj_set(obj, "name", val);
-        assert(err.type == SCJ_OK);
-
-        scjson out = scj_map_get(obj, "name");
+        scjson out = _scj_map_get(obj, "name");
         assert(out != NULL);
         assert(out->type == SCJ_STRING);
         assert(strcmp(out->value.string, "hello") == 0);
 
         scjson val2 = make_string("world");
+        scj_set(obj, "name", val2);
 
-        err = scj_set(obj, "name", val2);
-        assert(err.type == SCJ_OK);
-
-        scjson out2 = scj_map_get(obj, "name");
+        scjson out2 = _scj_map_get(obj, "name");
         assert(out2 != NULL);
+        assert(out2->type == SCJ_STRING);
         assert(strcmp(out2->value.string, "world") == 0);
 
         scj_free(obj);

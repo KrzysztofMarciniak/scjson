@@ -108,5 +108,36 @@ int main(void) {
     scj_free(root);
     free(text);
 
+// -------------------------------------------------------------------------
+// 4. Creating JSON Manually with scj_new_typed
+// -------------------------------------------------------------------------
+printf("\n--- PART 4: Creating JSON Manually ---\n");
+
+scjson manual = scj_new_typed(SCJ_OBJECT);
+
+scjson title = scj_new_typed(SCJ_STRING, "scjson");
+scjson version2 = scj_new_typed(SCJ_NUMBER, 2.0);
+scjson enabled = scj_new_typed(SCJ_BOOL, 1);
+
+scjson tags = scj_new_typed(SCJ_ARRAY);
+
+scj_add(tags, scj_new_typed(SCJ_STRING, "c99"));
+scj_add(tags, scj_new_typed(SCJ_STRING, "json"));
+scj_add(tags, scj_new_typed(SCJ_STRING, "minimal"));
+
+scj_set(manual, "title", title);
+scj_set(manual, "version", version2);
+scj_set(manual, "enabled", enabled);
+scj_set(manual, "tags", tags);
+
+char *manual_pretty = scj_pretty(manual);
+
+if (manual_pretty) {
+    printf("%s\n", manual_pretty);
+    free(manual_pretty);
+}
+
+scj_free(manual);
+
     return 0;
 }

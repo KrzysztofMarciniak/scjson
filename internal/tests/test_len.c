@@ -7,51 +7,71 @@
 
 #include "../scj_len.h"
 #include "../scj_set.h"
-#include "../scj_struct.h"
-#include "../scj_type.h"
+#include "../../scjson.h"
 
-static scjson make_object(void) {
+static scjson make_object(void)
+{
         scjson j = malloc(sizeof(struct scjson_struct));
         assert(j != NULL);
 
         j->type = SCJ_OBJECT;
 
-        j->value.object.map.buckets  = NULL;
-        j->value.object.map.count    = 0;
+        j->value.object.map.buckets = NULL;
+        j->value.object.map.count = 0;
         j->value.object.map.capacity = 0;
+
+        j->error.type = SCJ_OK;
+        j->error.message = NULL;
 
         return j;
 }
 
-static scjson make_string(const char* s) {
+static scjson make_string(const char* s)
+{
         scjson j = malloc(sizeof(struct scjson_struct));
         assert(j != NULL);
 
-        j->type         = SCJ_STRING;
+        j->type = SCJ_STRING;
         j->value.string = strdup(s);
+
+        j->error.type = SCJ_OK;
+        j->error.message = NULL;
 
         return j;
 }
 
-void test_len(void) {
+void test_len(void)
+{
         scjson obj = make_object();
 
-        assert(scj_len(obj) == 0);
+        assert(_scj_len(obj) == 0);
 
         scjson v1 = make_string("one");
         scjson v2 = make_string("two");
 
-        assert(scj_set(obj, "a", v1).type == SCJ_OK);
-        assert(scj_set(obj, "b", v2).type == SCJ_OK);
+        _scj_set(obj, "a", v1);
+        assert(obj->error.type == SCJ_OK);
 
-        assert(scj_len(obj) == 2);
+        _scj_set(obj, "b", v2);
+        assert(obj->error.type == SCJ_OK);
 
-        assert(scj_len(NULL) == 0);
+        assert(_scj_len(obj) == 2);
+        assert(_scj_len(NULL) == 0);
 
         scjson v3 = make_string("three");
 
-        assert(scj_set(obj, "a", v3).type == SCJ_OK);
+        _scj_set(obj, "a", v3);
+        assert(obj->error.type == SCJ_OK);
 
-        assert(scj_len(obj) == 2);
+        assert(_scj_len(obj) == 2);
+
+        free(v1->value.string);
+        free(v2->value.string);
+        free(v3->value.string);
+
+        free(v1);
+        free(v2);
+        free(v3);
+
         free(obj);
 }

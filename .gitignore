@@ -1,5 +1,6 @@
 *.o
 test_scjson
 scjson.o
+*.a
 example/example.bin
 example/example_error.bin

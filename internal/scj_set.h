@@ -3,6 +3,7 @@
 #define SCJ_SET_H
 
 #include <stddef.h>
+
 #include "../scjson.h"
 
 void _scj_set(scjson self, const char* key, scjson value);

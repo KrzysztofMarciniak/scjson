@@ -45,4 +45,3 @@ const char* scj_error_string(scj_error error) {
                         return "SCJSON: unknown error";
         }
 }
-

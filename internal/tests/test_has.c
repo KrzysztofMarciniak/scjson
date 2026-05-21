@@ -7,46 +7,57 @@
 
 #include "../scj_has.h"
 #include "../scj_set.h"
-#include "../scj_struct.h"
-#include "../scj_type.h"
+#include "../../scjson.h"
 
-static scjson make_object(void) {
+static scjson make_object(void)
+{
         scjson j = malloc(sizeof(struct scjson_struct));
         assert(j != NULL);
 
         j->type = SCJ_OBJECT;
 
-        j->value.object.map.buckets  = NULL;
-        j->value.object.map.count    = 0;
+        j->value.object.map.buckets = NULL;
+        j->value.object.map.count = 0;
         j->value.object.map.capacity = 0;
+
+        j->error.type = SCJ_OK;
+        j->error.message = NULL;
 
         return j;
 }
 
-static scjson make_string(const char* s) {
+static scjson make_string(const char* s)
+{
         scjson j = malloc(sizeof(struct scjson_struct));
         assert(j != NULL);
 
-        j->type         = SCJ_STRING;
+        j->type = SCJ_STRING;
         j->value.string = strdup(s);
+
+        j->error.type = SCJ_OK;
+        j->error.message = NULL;
 
         return j;
 }
 
-void test_has(void) {
+void test_has(void)
+{
         scjson obj = make_object();
 
         scjson val = make_string("hello");
 
-        scj_error_info err = scj_set(obj, "name", val);
+        _scj_set(obj, "name", val);
 
-        assert(err.type == SCJ_OK);
+        assert(obj->error.type == SCJ_OK);
 
-        assert(scj_has(obj, "name") == 1);
+        assert(_scj_has(obj, "name") == 1);
 
-        assert(scj_has(obj, "missing") == 0);
+        assert(_scj_has(obj, "missing") == 0);
 
-        assert(scj_has(NULL, "name") == 0);
+        assert(_scj_has(NULL, "name") == 0);
+
+        free(val->value.string);
+        free(val);
 
         free(obj);
 }

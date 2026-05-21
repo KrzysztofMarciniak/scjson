@@ -6,8 +6,7 @@
 
 #include "../scj_bool.h"
 #include "../scj_num.h"
-#include "../scj_struct.h"
-#include "../scj_type.h"
+#include "../../scjson.h"
 
 static scjson make_number(double v) {
         scjson j = malloc(sizeof(struct scjson_struct));

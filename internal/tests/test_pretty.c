@@ -9,8 +9,7 @@
 #include "../scj_add.h"
 #include "../scj_pretty.h"
 #include "../scj_set.h"
-#include "../scj_struct.h"
-#include "../scj_type.h"
+#include "../../scjson.h"
 
 static scjson obj(void) {
         scjson j = malloc(sizeof(struct scjson_struct));

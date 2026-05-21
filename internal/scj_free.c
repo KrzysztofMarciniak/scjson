@@ -1,9 +1,10 @@
 /* vi: set sw=8 ts=8: (internal/scj_free.c) */
 
+#include "scj_free.h"
+
 #include <stdlib.h>
 
 #include "../scjson.h"
-#include "scj_free.h"
 
 /* Forward declaration */
 void _scj_free(scjson obj);

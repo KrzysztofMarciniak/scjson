@@ -1,6 +1,7 @@
 /* vi: set sw=8 ts=8: (internal/scj_get.c) */
 
 #include "scj_get.h"
+
 #include "../scjson.h"
 #include "scj_map_get.h"
 

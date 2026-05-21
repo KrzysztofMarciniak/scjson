@@ -6,8 +6,7 @@
 #include <string.h>
 
 #include "../scj_str.h"
-#include "../scj_struct.h"
-#include "../scj_type.h"
+#include "../../scjson.h"
 
 static scjson make_string(const char* s) {
         scjson j = malloc(sizeof(struct scjson_struct));
