@@ -4,6 +4,11 @@
 
 It is simple, portable, and has no external dependencies. It uses POSIX.1-2008 where needed.
 
+## Public API
+
+```
+[https://github.com/KrzysztofMarciniak/scjson/blob/master/api.md](api.md)
+
 ## Name
 
 - `s` = simple
