@@ -7,6 +7,7 @@
 #include "../scj_map_set.h"
 #include "../scj_new.h"
 #include "../scj_struct.h"
+#include "../scj_free.h"
 
 void test_map_get(void) {
         scjson obj;
@@ -17,5 +18,5 @@ void test_map_get(void) {
         scj_map_init(obj);
         scj_map_set(obj, "user", value);
         assert(scj_map_get(obj, "user") == value);
-        obj->free(obj);
+        scj_free(obj);
 }

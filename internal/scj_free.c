@@ -2,10 +2,11 @@
 
 #include <stdlib.h>
 
-#include "scj_struct.h"
+#include "../scjson.h"
+#include "scj_free.h"
 
 /* Forward declaration */
-void scj_free(scjson obj);
+void _scj_free(scjson obj);
 
 /* ---------------- array ---------------- */
 
@@ -13,7 +14,7 @@ static void scj_array_free(scjson* items, size_t count) {
         if (!items) return;
 
         for (size_t i = 0; i < count; i++) {
-                scj_free(items[i]);
+                _scj_free(items[i]);
         }
 
         free(items);
@@ -31,7 +32,7 @@ static void scj_map_free(scj_map* map) {
                         scj_node* next = node->next;
 
                         /* free subtree first */
-                        scj_free(node->value);
+                        _scj_free(node->value);
 
                         /* free key */
                         free(node->key);
@@ -52,7 +53,7 @@ static void scj_map_free(scj_map* map) {
 
 /* ---------------- main free ---------------- */
 
-void scj_free(scjson obj) {
+void _scj_free(scjson obj) {
         if (!obj) return;
 
         switch (obj->type) {

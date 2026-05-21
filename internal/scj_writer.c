@@ -5,9 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "scj_struct.h"
-#include "scj_type.h"
+#include "../scjson.h"
 
 typedef struct {
         char* buf;
@@ -186,7 +184,7 @@ static int write_value(scj_writer* w, scjson v) {
         }
 }
 
-char* scj_write_dump(scjson self) {
+char* _scj_write_dump(scjson self) {
         scj_writer w = writer_new(0);
 
         if (!w.buf) return NULL;
@@ -199,7 +197,7 @@ char* scj_write_dump(scjson self) {
         return w.buf;
 }
 
-char* scj_write_pretty(scjson self) {
+char* _scj_write_pretty(scjson self) {
         scj_writer w = writer_new(1);
 
         if (!w.buf) return NULL;

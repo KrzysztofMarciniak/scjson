@@ -1,4 +1,3 @@
-/* vi: set sw=8 ts=8: (internal/scj_parse.c) */
 #define _POSIX_C_SOURCE 200809L
 #include "scj_parse.h"
 
@@ -7,185 +6,221 @@
 
 #include "scj_add.h"
 #include "scj_at.h"
-#include "scj_error.h"
 #include "scj_free.h"
 #include "scj_len.h"
 #include "scj_lexer.h"
 #include "scj_map_set.h"
 #include "scj_new.h"
+#include "../scjson.h"
 
-/* Forward declarations */
 static scjson parse_value(scj_lexer* l);
 static scjson parse_array(scj_lexer* l);
 static scjson parse_object(scj_lexer* l);
 
-/* parse_value */
+static void set_error(scjson j, scj_error type, const char* msg, scj_lexer* l) {
+    if (!j) return;
+    j->error.type = type;
+    j->error.message = msg ? msg : "parse error";
+    if (l) {
+        j->error.loc.line = l->line;
+        j->error.loc.column = l->column;
+        j->error.loc.position = l->pos;
+    }
+}
+
 static scjson parse_value(scj_lexer* l) {
-        scjson j = scj_new();
-        if (!j) return NULL;
+    scjson j = scj_new();
+    if (!j) return NULL;
 
-        scj_token t = scj_lexer_next(l);
-
-        switch (t.type) {
-                case SCJ_T_STRING:
-                        j->type         = SCJ_STRING;
-                        j->value.string = strndup(t.start, t.len);
-                        if (!j->value.string) {
-                                j->free(j);
-                                return NULL;
-                        }
-                        break;
-
-                case SCJ_T_NUMBER:
-                        j->type         = SCJ_NUMBER;
-                        j->value.number = t.number;
-                        break;
-
-                case SCJ_T_TRUE:
-                        j->type          = SCJ_BOOL;
-                        j->value.boolean = 1;
-                        break;
-
-                case SCJ_T_FALSE:
-                        j->type          = SCJ_BOOL;
-                        j->value.boolean = 0;
-                        break;
-
-                case SCJ_T_NULL:
-                        j->type = SCJ_NULL;
-                        break;
-
-                case SCJ_T_LBRACK:
-                        j->free(j);
-                        return parse_array(l);
-
-                case SCJ_T_LBRACE:
-                        j->free(j);
-                        return parse_object(l);
-
-                default:
-                        j->free(j);
-                        return NULL;
-        }
-
+    if (!l) {
+        set_error(j, SCJ_ERR_PARSE, "Lexer is NULL", NULL);
         return j;
+    }
+
+    scj_token t = scj_lexer_next(l);
+
+    switch (t.type) {
+    case SCJ_T_STRING:
+        j->type = SCJ_STRING;
+        j->value.string = strndup(t.start, t.len);
+        if (!j->value.string)
+            set_error(j, SCJ_ERR_ALLOC, "Failed to allocate string", l);
+        return j;
+
+    case SCJ_T_NUMBER:
+        j->type = SCJ_NUMBER;
+        j->value.number = t.number;
+        return j;
+
+    case SCJ_T_TRUE:
+        j->type = SCJ_BOOL;
+        j->value.boolean = 1;
+        return j;
+
+    case SCJ_T_FALSE:
+        j->type = SCJ_BOOL;
+        j->value.boolean = 0;
+        return j;
+
+    case SCJ_T_NULL:
+        j->type = SCJ_NULL;
+        return j;
+
+    case SCJ_T_LBRACK:
+        scj_free(j);
+        return parse_array(l);
+
+    case SCJ_T_LBRACE:
+        scj_free(j);
+        return parse_object(l);
+
+    default:
+        set_error(j, SCJ_ERR_UNEXPECTED_TOKEN, "Unexpected token", l);
+        return j;
+    }
 }
 
-/* parse_array */
 static scjson parse_array(scj_lexer* l) {
-        scjson arr = scj_new();
-        if (!arr) return NULL;
+    scjson arr = scj_new();
+    if (!arr) return NULL;
 
-        arr->type                 = SCJ_ARRAY;
-        arr->value.array.items    = NULL;
-        arr->value.array.count    = 0;
-        arr->value.array.capacity = 0;
+    arr->type = SCJ_ARRAY;
+    arr->value.array.items = NULL;
+    arr->value.array.count = 0;
+    arr->value.array.capacity = 0;
 
-        arr->add  = scj_add;
-        arr->len  = scj_len;
-        arr->at   = scj_at;
-        arr->free = scj_free;
+    scj_token t = scj_lexer_next(l);
+    if (t.type == SCJ_T_RBRACK) return arr;
 
-        scj_token t = scj_lexer_next(l);
-        if (t.type == SCJ_T_RBRACK) return arr;
+    scj_lexer_pushback(l, t);
 
-        scj_lexer_pushback(l, t);
-
-        while (1) {
-                scjson val = parse_value(l);
-                if (!val) {
-                        arr->free(arr);
-                        return NULL;
-                }
-
-                scj_error_info err = scj_add(arr, val);
-                if (err.type != SCJ_OK) {
-                        val->free(val);
-                        arr->free(arr);
-                        return NULL;
-                }
-
-                t = scj_lexer_next(l);
-                if (t.type == SCJ_T_COMMA) continue;
-                if (t.type == SCJ_T_RBRACK) break;
-
-                arr->free(arr);
-                return NULL;
+    while (1) {
+        scjson val = parse_value(l);
+        if (!val) {
+            set_error(arr, SCJ_ERR_PARSE, "Failed to parse array value", l);
+            return arr;
         }
 
+        if (val->error.type != SCJ_OK) {
+            scj_free(arr);
+            return val;
+        }
+
+        _scj_add(arr, val);
+        if (arr->error.type != SCJ_OK) {
+            scj_free(val);
+            return arr;
+        }
+
+        t = scj_lexer_next(l);
+        if (t.type == SCJ_T_COMMA) continue;
+        if (t.type == SCJ_T_RBRACK) break;
+
+        set_error(arr, SCJ_ERR_UNEXPECTED_TOKEN, "Expected ',' or ']'", l);
         return arr;
+    }
+
+    return arr;
 }
 
-/* parse_object */
 static scjson parse_object(scj_lexer* l) {
-        scjson obj = scj_new();
-        if (!obj) return NULL;
+    scjson obj = scj_new();
+    if (!obj) return NULL;
 
-        obj->type                      = SCJ_OBJECT;
-        obj->value.object.map.buckets  = NULL;
-        obj->value.object.map.count    = 0;
-        obj->value.object.map.capacity = 0;
+    obj->type = SCJ_OBJECT;
+    obj->value.object.map.buckets = NULL;
+    obj->value.object.map.count = 0;
+    obj->value.object.map.capacity = 0;
 
-        scj_token t = scj_lexer_next(l);
-        if (t.type == SCJ_T_RBRACE) return obj;
+    scj_token t = scj_lexer_next(l);
+    if (t.type == SCJ_T_RBRACE) return obj;
 
-        scj_lexer_pushback(l, t);
+    scj_lexer_pushback(l, t);
 
-        while (1) {
-                t = scj_lexer_next(l);
-                if (t.type != SCJ_T_STRING) {
-                        obj->free(obj);
-                        return NULL;
-                }
-
-                char* key = strndup(t.start, t.len);
-                if (!key) {
-                        obj->free(obj);
-                        return NULL;
-                }
-
-                t = scj_lexer_next(l);
-                if (t.type != SCJ_T_COLON) {
-                        free(key);
-                        obj->free(obj);
-                        return NULL;
-                }
-
-                scjson val = parse_value(l);
-                if (!val) {
-                        free(key);
-                        obj->free(obj);
-                        return NULL;
-                }
-
-                scj_error_info err = scj_map_set(obj, key, val);
-                free(key);
-                if (err.type != SCJ_OK) {
-                        val->free(val);
-                        obj->free(obj);
-                        return NULL;
-                }
-
-                t = scj_lexer_next(l);
-                if (t.type == SCJ_T_COMMA) continue;
-                if (t.type == SCJ_T_RBRACE) break;
-
-                obj->free(obj);
-                return NULL;
+    while (1) {
+        t = scj_lexer_next(l);
+        if (t.type != SCJ_T_STRING) {
+            set_error(obj, SCJ_ERR_INVALID_KEY, "Expected string key", l);
+            return obj;
         }
 
+        char* key = strndup(t.start, t.len);
+        if (!key) {
+            set_error(obj, SCJ_ERR_ALLOC, "Failed to allocate key", l);
+            return obj;
+        }
+
+        t = scj_lexer_next(l);
+        if (t.type != SCJ_T_COLON) {
+            free(key);
+            set_error(obj, SCJ_ERR_UNEXPECTED_TOKEN, "Expected ':' after key", l);
+            return obj;
+        }
+
+        scjson val = parse_value(l);
+        if (!val) {
+            free(key);
+            set_error(obj, SCJ_ERR_PARSE, "Failed to parse value for key", l);
+            return obj;
+        }
+
+        if (val->error.type != SCJ_OK) {
+            free(key);
+            scj_free(obj);
+            return val;
+        }
+
+        _scj_map_set(obj, key, val);
+        if (obj->error.type != SCJ_OK) {
+            free(key);
+            scj_free(val);
+            return obj;
+        }
+
+        free(key);
+
+        t = scj_lexer_next(l);
+        if (t.type == SCJ_T_COMMA) continue;
+        if (t.type == SCJ_T_RBRACE) break;
+
+        set_error(obj, SCJ_ERR_UNEXPECTED_TOKEN, "Expected ',' or '}'", l);
         return obj;
+    }
+
+    return obj;
 }
 
-/* scj_parse API */
-scjson scj_parse(const char* text) {
-        if (!text) return NULL;
+scjson _scj_parse(const char* text) {
+    scjson root = scj_new();
+    if (!root) return NULL;
 
-        scj_lexer* l = scj_lexer_new(text);
-        if (!l) return NULL;
+    if (!text) {
+        set_error(root, SCJ_ERR_INVALID_VALUE, "Input text is NULL", NULL);
+        return root;
+    }
 
-        scjson result = parse_value(l);
+    scj_lexer* l = scj_lexer_new(text);
+    if (!l) {
+        set_error(root, SCJ_ERR_ALLOC, "Failed to allocate lexer", NULL);
+        return root;
+    }
 
-        scj_lexer_free(&l);
-        return result;
+    scjson node = parse_value(l);
+
+    scj_lexer_free(&l);
+
+    if (!node) {
+        set_error(root, SCJ_ERR_PARSE, "Failed to parse JSON", NULL);
+        return root;
+    }
+
+    if (node->error.type != SCJ_OK) {
+        scj_free(root);
+        return node;
+    }
+
+    *root = *node;
+    free(node);
+
+    return root;
 }

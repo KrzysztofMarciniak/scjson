@@ -3,6 +3,7 @@
 #define SCJ_MAP_GET_H
 
 #include "../scjson.h"
-scjson scj_map_get(scjson self, const char* key);
+
+scjson _scj_map_get(scjson self, const char* key);
 
 #endif

@@ -7,6 +7,6 @@
 
 #include "../scjson.h"
 
-size_t scj_len(scjson self);
+size_t _scj_len(scjson self);
 
 #endif

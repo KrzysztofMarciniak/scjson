@@ -5,6 +5,6 @@
 
 #include "../scjson.h"
 
-int scj_bool(scjson self);
+int _scj_bool(scjson self);
 
 #endif

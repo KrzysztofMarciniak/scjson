@@ -3,7 +3,7 @@
 
 // http://www.cse.yorku.ca/~oz/hash.html
 // djb2
-unsigned long scj_hash(const char* str) {
+unsigned long _scj_hash(const char* str) {
         unsigned long hash = 5381;
         int c;
         while ((c = *str++)) {

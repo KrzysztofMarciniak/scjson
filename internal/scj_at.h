@@ -6,6 +6,6 @@
 
 #include "../scjson.h"
 
-scjson scj_at(scjson self, size_t index);
+scjson _scj_at(scjson self, size_t index);
 
 #endif

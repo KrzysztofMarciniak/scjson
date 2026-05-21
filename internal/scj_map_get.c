@@ -6,9 +6,7 @@
 
 #include "../scjson.h"
 #include "scj_hash.h"
-#include "scj_struct.h"
-
-scjson scj_map_get(scjson self, const char* key) {
+scjson _scj_map_get(scjson self, const char* key) {
         scj_node* node;
         size_t index;
 
@@ -20,7 +18,7 @@ scjson scj_map_get(scjson self, const char* key) {
 
         if (!self->value.object.map.buckets) return NULL;
 
-        index = scj_hash(key) % self->value.object.map.capacity;
+        index = _scj_hash(key) % self->value.object.map.capacity;
 
         node = self->value.object.map.buckets[index];
 

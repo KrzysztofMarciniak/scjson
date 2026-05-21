@@ -1,0 +1,84 @@
+\doxysection{scj\+\_\+token.\+h}
+\hypertarget{scj__token_8h_source}{}\label{scj__token_8h_source}\index{internal/scj\_token.h@{internal/scj\_token.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*\ vi:\ set\ sw=8\ ts=8:\ (internal/scj\_token.h)\ */}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#ifndef\ SCJ\_TOKEN\_H}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#define\ SCJ\_TOKEN\_H}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <limits.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{/*\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Token\ types\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ */}}
+\DoxyCodeLine{00010\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ SCJ\_T\_EOF\ =\ 0,}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ SCJ\_T\_LBRACE,\ \textcolor{comment}{/*\ \{\ */}}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ SCJ\_T\_RBRACE,\ \textcolor{comment}{/*\ \}\ */}}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ SCJ\_T\_LBRACK,\ \textcolor{comment}{/*\ [\ */}}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ SCJ\_T\_RBRACK,\ \textcolor{comment}{/*\ ]\ */}}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ SCJ\_T\_COLON,\ \ \textcolor{comment}{/*\ :\ */}}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ SCJ\_T\_COMMA,\ \ \textcolor{comment}{/*\ ,\ */}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ SCJ\_T\_STRING,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ SCJ\_T\_NUMBER,}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ SCJ\_T\_TRUE,}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ SCJ\_T\_FALSE,}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ SCJ\_T\_NULL,}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ SCJ\_T\_ERROR}
+\DoxyCodeLine{00027\ \}\ scj\_token\_type;}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{/*\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Token\ structure\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ */}}
+\DoxyCodeLine{00030\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ scj\_token\_type\ type;}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ start;\ \textcolor{comment}{/*\ pointer\ into\ JSON\ string,\ may\ be\ NULL\ */}}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ len;\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ length\ of\ token\ */}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ number;\ \textcolor{comment}{/*\ only\ valid\ if\ type\ ==\ SCJ\_T\_NUMBER\ */}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ line;\ \ \ \ \ \textcolor{comment}{/*\ line\ number,\ 1-\/based\ */}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ column;\ \ \ \textcolor{comment}{/*\ column\ number,\ 1-\/based\ */}}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ position;\ \textcolor{comment}{/*\ absolute\ char\ offset\ */}}
+\DoxyCodeLine{00041\ \}\ \doxymbox{\hyperlink{structscj__token}{scj\_token}};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{comment}{/*\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Token\ helpers\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ */}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{comment}{/*\ Initialize\ token\ safely\ */}}
+\DoxyCodeLine{00046\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \doxymbox{\hyperlink{structscj__token}{scj\_token}}\ scj\_token\_init(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structscj__token}{scj\_token}}\ t;}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ t.type\ \ \ \ \ =\ SCJ\_T\_ERROR;}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ t.start\ \ \ \ =\ NULL;}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ t.len\ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ t.number\ \ \ =\ 0.0;}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ t.line\ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ t.column\ \ \ =\ 0;}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ t.position\ =\ 0;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ t;}
+\DoxyCodeLine{00056\ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{comment}{/*\ Validate\ token:\ returns\ 1\ if\ valid,\ 0\ if\ invalid\ */}}
+\DoxyCodeLine{00059\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ scj\_token\_valid(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structscj__token}{scj\_token}}*\ t)\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!t)\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t-\/>type\ <\ SCJ\_T\_EOF\ ||\ t-\/>type\ >\ SCJ\_T\_ERROR)\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t-\/>start\ ==\ NULL\ \&\&\ t-\/>type\ ==\ SCJ\_T\_STRING)\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t-\/>len\ >\ SIZE\_MAX\ -\/\ 1)\ \textcolor{keywordflow}{return}\ 0;\ \textcolor{comment}{/*\ sanity\ check\ */}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t-\/>line\ >\ SIZE\_MAX\ ||\ t-\/>column\ >\ SIZE\_MAX\ ||}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ t-\/>position\ >\ SIZE\_MAX)}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{00068\ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{comment}{/*\ Check\ if\ token\ is\ a\ scalar\ */}}
+\DoxyCodeLine{00071\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ scj\_token\_is\_scalar(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structscj__token}{scj\_token}}*\ t)\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!t)\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ t-\/>type\ ==\ SCJ\_T\_STRING\ ||\ t-\/>type\ ==\ SCJ\_T\_NUMBER\ ||}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ t-\/>type\ ==\ SCJ\_T\_TRUE\ ||\ t-\/>type\ ==\ SCJ\_T\_FALSE\ ||}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ t-\/>type\ ==\ SCJ\_T\_NULL;}
+\DoxyCodeLine{00076\ \}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

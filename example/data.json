@@ -1,0 +1,10 @@
+{
+  "name": "scjson",
+  "version": 1,
+  "active": true,
+  "features": [
+    "parser",
+    "pretty printer",
+    "hash map"
+  ]
+}

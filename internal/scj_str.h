@@ -5,6 +5,6 @@
 
 #include "../scjson.h"
 
-const char* scj_str(scjson self);
+const char* _scj_str(scjson self);
 
 #endif

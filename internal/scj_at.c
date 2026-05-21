@@ -2,10 +2,9 @@
 
 #include "scj_at.h"
 
-#include "scj_struct.h"
-#include "scj_type.h"
+#include "../scjson.h"
 
-scjson scj_at(scjson self, size_t index) {
+scjson _scj_at(scjson self, size_t index) {
         if (!self) {
                 return NULL;
         }

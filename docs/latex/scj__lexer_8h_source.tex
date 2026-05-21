@@ -1,0 +1,62 @@
+\doxysection{scj\+\_\+lexer.\+h}
+\hypertarget{scj__lexer_8h_source}{}\label{scj__lexer_8h_source}\index{internal/scj\_lexer.h@{internal/scj\_lexer.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*\ vi:\ set\ sw=8\ ts=8:\ (internal/scj\_lexer.h)\ */}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#ifndef\ SCJ\_LEXER\_H}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#define\ SCJ\_LEXER\_H}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}scj\_token.h"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{comment}{/*\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Lexer\ structure\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ */}}
+\DoxyCodeLine{00012\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structscj__lexer}{scj\_lexer}}\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ src;\ \textcolor{comment}{/*\ input\ string\ */}}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ pos;\ \ \ \ \ \ \textcolor{comment}{/*\ current\ position\ in\ src\ */}}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ len;\ \ \ \ \ \ \textcolor{comment}{/*\ length\ of\ src\ */}}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ line;\ \ \ \ \ \textcolor{comment}{/*\ current\ line,\ 1-\/based\ */}}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ column;\ \ \ \textcolor{comment}{/*\ current\ column,\ 1-\/based\ */}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ pushback\ support\ */}}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ pushback;\ \ \ \ \ \ \ \textcolor{comment}{/*\ 1\ if\ a\ token\ has\ been\ pushed\ back\ */}}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structscj__token}{scj\_token}}\ pb\_token;\ \textcolor{comment}{/*\ stored\ pushed-\/back\ token\ */}}
+\DoxyCodeLine{00022\ \}\ \doxymbox{\hyperlink{structscj__lexer}{scj\_lexer}};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{/*\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Lexer\ API\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ */}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{/*\ Allocate\ a\ new\ lexer\ on\ heap\ and\ initialize\ */}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \doxymbox{\hyperlink{structscj__lexer}{scj\_lexer}}*\ scj\_lexer\_new(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ input)\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!input)\ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structscj__lexer}{scj\_lexer}}*\ l\ =\ (\doxymbox{\hyperlink{structscj__lexer}{scj\_lexer}}*)malloc(\textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{structscj__lexer}{scj\_lexer}}));}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!l)\ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ l-\/>src\ \ \ \ \ \ =\ input;}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ l-\/>pos\ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ l-\/>len\ \ \ \ \ \ =\ strlen(input);}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ l-\/>line\ \ \ \ \ =\ 1;}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ l-\/>column\ \ \ =\ 1;}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ l-\/>pushback\ =\ 0;}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ l;}
+\DoxyCodeLine{00038\ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{/*\ Free\ lexer\ memory\ */}}
+\DoxyCodeLine{00041\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ scj\_lexer\_free(\doxymbox{\hyperlink{structscj__lexer}{scj\_lexer}}**\ lptr)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!lptr\ ||\ !*lptr)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ free(*lptr);}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ *lptr\ =\ NULL;}
+\DoxyCodeLine{00045\ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{/*\ Initialize\ lexer\ on\ stack\ */}}
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{void}\ scj\_lexer\_init(\doxymbox{\hyperlink{structscj__lexer}{scj\_lexer}}*\ l,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ input);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{/*\ Get\ next\ token\ from\ input\ */}}
+\DoxyCodeLine{00051\ \doxymbox{\hyperlink{structscj__token}{scj\_token}}\ scj\_lexer\_next(\doxymbox{\hyperlink{structscj__lexer}{scj\_lexer}}*\ l);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{comment}{/*\ Push\ a\ token\ back\ onto\ the\ lexer\ (for\ re-\/parsing)\ */}}
+\DoxyCodeLine{00054\ \textcolor{keywordtype}{void}\ scj\_lexer\_pushback(\doxymbox{\hyperlink{structscj__lexer}{scj\_lexer}}*\ l,\ \doxymbox{\hyperlink{structscj__token}{scj\_token}}\ t);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SCJ\_LEXER\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

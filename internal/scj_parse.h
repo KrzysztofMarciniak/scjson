@@ -4,8 +4,8 @@
 #define SCJ_PARSE_H
 
 #include "scj_lexer.h"
-#include "scjson.h"
+#include "../scjson.h"
 
-scjson scj_parse(const char* text);
+scjson _scj_parse(const char* text);
 
 #endif

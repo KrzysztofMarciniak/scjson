@@ -10,57 +10,32 @@
 #include "../scj_parse.h"
 #include "../scj_struct.h"
 #include "../scj_type.h"
+#include "../scj_free.h"
 
-// Helpers
-static scjson make_scalar_string(const char* s) {
-        scjson j = malloc(sizeof(struct scjson_struct));
-        assert(j != NULL);
-        j->type         = SCJ_STRING;
-        j->value.string = strdup(s);
-        return j;
-}
-
-static scjson make_scalar_number(double n) {
-        scjson j = malloc(sizeof(struct scjson_struct));
-        assert(j != NULL);
-        j->type         = SCJ_NUMBER;
-        j->value.number = n;
-        return j;
-}
-
-static scjson make_scalar_bool(int b) {
-        scjson j = malloc(sizeof(struct scjson_struct));
-        assert(j != NULL);
-        j->type          = SCJ_BOOL;
-        j->value.boolean = b;
-        return j;
-}
-
-// Internal test functions
 static void test_parse_scalar(void) {
         scjson j;
 
         j = scj_parse("\"hello\"");
         assert(j->type == SCJ_STRING);
         assert(strcmp(j->value.string, "hello") == 0);
-        j->free(j);
+        scj_free(j);
 
         j = scj_parse("42");
         assert(j->type == SCJ_NUMBER);
         assert(j->value.number == 42);
-        j->free(j);
+        scj_free(j);
 
         j = scj_parse("true");
         assert(j->type == SCJ_BOOL && j->value.boolean == 1);
-        j->free(j);
+        scj_free(j);
 
         j = scj_parse("false");
         assert(j->type == SCJ_BOOL && j->value.boolean == 0);
-        j->free(j);
+        scj_free(j);
 
         j = scj_parse("null");
         assert(j->type == SCJ_NULL);
-        j->free(j);
+        scj_free(j);
 }
 
 static void test_parse_array(void) {
@@ -68,13 +43,17 @@ static void test_parse_array(void) {
         assert(j != NULL);
         assert(j->type == SCJ_ARRAY);
         assert(scj_len(j) == 3);
-        assert(j->at(j, 0)->type == SCJ_NUMBER &&
-               j->at(j, 0)->value.number == 1);
-        assert(j->at(j, 1)->type == SCJ_NUMBER &&
-               j->at(j, 1)->value.number == 2);
-        assert(j->at(j, 2)->type == SCJ_NUMBER &&
-               j->at(j, 2)->value.number == 3);
-        j->free(j);
+
+        assert(scj_at(j, 0)->type == SCJ_NUMBER &&
+               scj_at(j, 0)->value.number == 1);
+
+        assert(scj_at(j, 1)->type == SCJ_NUMBER &&
+               scj_at(j, 1)->value.number == 2);
+
+        assert(scj_at(j, 2)->type == SCJ_NUMBER &&
+               scj_at(j, 2)->value.number == 3);
+
+        scj_free(j);
 }
 
 static void test_parse_object(void) {
@@ -91,7 +70,7 @@ static void test_parse_object(void) {
         assert(scj_map_get(j, "c")->type == SCJ_STRING &&
                strcmp(scj_map_get(j, "c")->value.string, "x") == 0);
 
-        j->free(j);
+        scj_free(j);
 }
 
 static void test_parse_nested(void) {
@@ -101,13 +80,13 @@ static void test_parse_nested(void) {
         scjson obj = scj_map_get(j, "obj");
 
         assert(arr->type == SCJ_ARRAY && scj_len(arr) == 2);
-        assert(arr->at(arr, 0)->value.number == 1);
-        assert(arr->at(arr, 1)->value.number == 2);
+        assert(scj_at(arr, 0)->value.number == 1);
+        assert(scj_at(arr, 1)->value.number == 2);
 
         assert(obj->type == SCJ_OBJECT && scj_len(obj) == 1);
         assert(scj_map_get(obj, "x")->value.number == 10);
 
-        j->free(j);
+        scj_free(j);
 }
 
 void test_parse(void) {

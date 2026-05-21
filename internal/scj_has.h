@@ -5,6 +5,6 @@
 
 #include "../scjson.h"
 
-int scj_has(scjson self, const char* key);
+int _scj_has(scjson self, const char* key);
 
 #endif

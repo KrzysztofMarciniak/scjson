@@ -1,12 +1,10 @@
 /* vi: set sw=8 ts=8: (internal/scj_get.c) */
 
 #include "scj_get.h"
-
+#include "../scjson.h"
 #include "scj_map_get.h"
-#include "scj_struct.h"
-#include "scj_type.h"
 
-scjson scj_get(scjson self, const char* key) {
+scjson _scj_get(scjson self, const char* key) {
         if (!self || !key) {
                 return NULL;
         }
@@ -15,5 +13,5 @@ scjson scj_get(scjson self, const char* key) {
                 return NULL;
         }
 
-        return scj_map_get(self, key);
+        return _scj_map_get(self, key);
 }

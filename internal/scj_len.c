@@ -2,10 +2,7 @@
 
 #include "scj_len.h"
 
-#include "scj_struct.h"
-#include "scj_type.h"
-
-size_t scj_len(scjson self) {
+size_t _scj_len(scjson self) {
         if (!self) {
                 return 0;
         }

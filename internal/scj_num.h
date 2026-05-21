@@ -5,6 +5,6 @@
 
 #include "../scjson.h"
 
-double scj_num(scjson self);
+double _scj_num(scjson self);
 
 #endif

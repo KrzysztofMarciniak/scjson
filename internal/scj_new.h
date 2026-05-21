@@ -4,6 +4,6 @@
 
 #include "../scjson.h"
 
-scjson scj_new(void);
+scjson _scj_new(void);
 
 #endif

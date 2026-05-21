@@ -1,0 +1,6 @@
+{
+    "name": "Example",
+    "version": 1,
+    "active": tru,      // <-- typo! should be "true"
+    "features": ["A", "B", "C"],
+}

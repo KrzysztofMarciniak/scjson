@@ -7,7 +7,7 @@
 
 #include "../scjson.h"
 
-char* scj_write_dump(scjson self);
-char* scj_write_pretty(scjson self);
+char* _scj_write_dump(scjson self);
+char* _scj_write_pretty(scjson self);
 
 #endif

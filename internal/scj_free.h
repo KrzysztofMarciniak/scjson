@@ -3,9 +3,8 @@
 #ifndef SCJ_FREE_H
 #define SCJ_FREE_H
 
-#include "scj_struct.h"
+#include "../scjson.h"
 
-/* Frees a scjson object and all nested contents recursively */
-void scj_free(scjson obj);
+void _scj_free(scjson obj);
 
 #endif /* SCJ_FREE_H */

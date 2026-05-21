@@ -1,11 +1,9 @@
 /* vi: set sw=8 ts=8: (internal/scj_bool.c) */
 
 #include "scj_bool.h"
+#include "../scjson.h"
 
-#include "scj_struct.h"
-#include "scj_type.h"
-
-int scj_bool(scjson self) {
+int _scj_bool(scjson self) {
         if (!self) {
                 return 0;
         }

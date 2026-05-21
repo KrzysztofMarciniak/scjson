@@ -5,6 +5,6 @@
 
 #include "../scjson.h"
 
-char* scj_pretty(scjson self);
+char* _scj_pretty(scjson self);
 
 #endif

@@ -9,6 +9,7 @@
 #include "../scj_set.h"
 #include "../scj_struct.h"
 #include "../scj_type.h"
+#include "../scj_free.h"
 
 static scjson make_object(void) {
         scjson j = malloc(sizeof(struct scjson_struct));
@@ -54,5 +55,5 @@ void test_set(void) {
         assert(out2 != NULL);
         assert(strcmp(out2->value.string, "world") == 0);
 
-        free(obj);
+        scj_free(obj);
 }

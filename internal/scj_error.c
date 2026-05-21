@@ -1,5 +1,5 @@
 /* vi: set sw=8 ts=8: */
-#include "scj_error.h"
+#include "../scjson.h"
 
 const char* scj_error_string(scj_error error) {
         switch (error) {
@@ -46,22 +46,3 @@ const char* scj_error_string(scj_error error) {
         }
 }
 
-scj_error_info scj_err_ok(void) {
-        scj_error_info er;
-        er.type         = SCJ_OK;
-        er.message      = NULL;
-        er.loc.line     = 0;
-        er.loc.column   = 0;
-        er.loc.position = 0;
-        return er;
-}
-
-scj_error_info scj_err_set(scj_error type, const char* message) {
-        scj_error_info er;
-        er.type         = type;
-        er.message      = message;
-        er.loc.line     = 0;
-        er.loc.column   = 0;
-        er.loc.position = 0;
-        return er;
-}
