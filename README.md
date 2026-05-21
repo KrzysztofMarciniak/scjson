@@ -7,7 +7,6 @@ It is simple, portable, and has no external dependencies. It uses POSIX.1-2008 w
 ## Public API
 [api.md](https://github.com/KrzysztofMarciniak/scjson/blob/master/api.md)
 
-```
 ## Name
 
 - `s` = simple
