@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "../scjson.h"
+#include "scj_free.h"
 #include "scj_hash.h"
 
 /**
@@ -63,6 +64,7 @@ void _scj_map_set(scjson self, const char* key, scjson value) {
 
         while (node) {
                 if (strcmp(node->key, key) == 0) {
+                        _scj_free(node->value);
                         node->value         = value;
                         self->error.type    = SCJ_OK;
                         self->error.message = NULL;
