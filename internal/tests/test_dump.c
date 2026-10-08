@@ -112,6 +112,20 @@ static void test_scalars(void)
         free(s);
 }
 
+
+
+static void test_string_escape(void)
+{
+
+        char input[] = {'A', 0x01, 'B', '\0'};
+        scjson s = str(input);
+        char* out = _scj_dump(s);
+        assert(strcmp(out, "\"A\\u0001B\"") == 0);
+        free(out);
+        free(s->value.string);
+        free(s);
+}
+
 static void test_array_flat(void)
 {
         scjson a = arr();
@@ -236,4 +250,5 @@ void test_dump(void)
         test_nested_array();
         test_nested_object();
         test_mixed();
+        test_string_escape();
 }
