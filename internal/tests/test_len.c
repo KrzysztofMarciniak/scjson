@@ -7,6 +7,7 @@
 
 #include "../scj_len.h"
 #include "../scj_set.h"
+#include "../scj_free.h"
 #include "../../scjson.h"
 
 static scjson make_object(void)
@@ -33,6 +34,7 @@ static scjson make_string(const char* s)
 
         j->type = SCJ_STRING;
         j->value.string = strdup(s);
+        assert(j->value.string != NULL);
 
         j->error.type = SCJ_OK;
         j->error.message = NULL;
@@ -65,13 +67,5 @@ void test_len(void)
 
         assert(_scj_len(obj) == 2);
 
-        free(v1->value.string);
-        free(v2->value.string);
-        free(v3->value.string);
-
-        free(v1);
-        free(v2);
-        free(v3);
-
-        free(obj);
+        _scj_free(obj);
 }
