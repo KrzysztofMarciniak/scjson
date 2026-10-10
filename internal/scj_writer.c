@@ -80,17 +80,74 @@ static int indent(scj_writer* w) {
 static int write_value(scj_writer* w, scjson v);
 
 static int write_string(scj_writer* w, const char* s) {
+        char buffer[5];
         if (!append_c(w, '"')) return 0;
 
         for (const char* p = s; *p; p++) {
-                if (*p == '"' || *p == '\\') {
-                        if (!append_c(w, '\\')) return 0;
-                }
-                if (!append_c(w, *p)) return 0;
-        }
+                switch (*p)
+                {
+                        case '"':
+                        if(!append_c(w, '\\')) return 0;
+                        if(!append_c(w, '"')) return 0;
+                        break;
 
+                        case '\\':
+                        if(!append_c(w, '\\')) return 0;
+                        if(!append_c(w, '\\')) return 0;
+                        break;
+
+                        case '\n':
+                        if(!append_c(w, '\\')) return 0;
+                        if(!append_c(w, 'n')) return 0;
+                        break;
+
+                        case '\t':
+                        if(!append_c(w, '\\')) return 0;
+                        if(!append_c(w, 't')) return 0;
+                        break;
+
+                        case '\r':
+                        if(!append_c(w, '\\')) return 0;
+                        if(!append_c(w, 'r')) return 0;
+                        break;
+
+                        case '\b':
+                        if(!append_c(w, '\\')) return 0;
+                        if(!append_c(w, 'b')) return 0;
+                        break;
+
+                        case '\f':
+                        if(!append_c(w, '\\')) return 0;
+                        if(!append_c(w, 'f')) return 0;
+                        break;
+
+                        default:
+
+                        if((unsigned char) *p < 0x20)
+                        {
+
+                                snprintf(buffer, sizeof(buffer), "%04X", (unsigned char)*p);
+                                if(!append_c(w, '\\')) return 0;
+                                if(!append_c(w,'u')) return 0;
+
+                                for(int i =0;buffer[i] != '\0'; i++){
+                                        if(!append_c(w, buffer[i])) return 0;
+                                }
+
+
+
+
+                        }else{
+
+                                if(!append_c(w, *p)) return 0;
+                                break;
+                        }
+                }
+        }
         return append_c(w, '"');
+
 }
+
 
 static int write_array(scj_writer* w, scjson v) {
         if (!append_c(w, '[')) return 0;
